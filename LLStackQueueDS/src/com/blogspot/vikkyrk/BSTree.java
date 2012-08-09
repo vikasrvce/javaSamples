@@ -1,5 +1,8 @@
 package com.blogspot.vikkyrk;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class BSTree<T extends Comparable<T>> {
 	
 	BSTNode root = null;
@@ -48,21 +51,125 @@ public class BSTree<T extends Comparable<T>> {
 	}
 	
 	public void recursiveInsert(T t) {
-		recursiveInsert(root, t);
+		root = recursiveInsert(root, t);
 	}
 	
-	//FIXME: Currently Not working
-	private void recursiveInsert(BSTNode node, T t) {
+	private BSTNode recursiveInsert(BSTNode node, T t) {
 		if(node == null) {
 			node = new BSTNode(t);
-			return;
+			return node;
 		}
 		
 		if(node.value.compareTo(t) < 0) {
-			recursiveInsert(node.right,t);
+			node.right = recursiveInsert(node.right,t);
 		} else {
-		    recursiveInsert(node.left,t);
+		    node.left = recursiveInsert(node.left,t);
 		}
+		return node;
+	}
+	
+	public void delete(T t) {
+		if(root == null)
+			return;
+		
+		BSTNode current = root;
+		BSTNode parent = null;
+		int compare, branch=0;
+		do {
+			compare = current.value.compareTo(t);
+			if(compare < 0) {
+				parent = current;
+				branch = compare;
+				current = current.right;
+			}	
+			else if(compare > 0) {
+				parent = current;
+				branch = compare;
+				current = current.left;
+			}
+			else
+				break;
+		} while(current!=null);
+
+		if(current != null) {
+			if(current.left == null && current.right == null) {
+				if(current == root) {
+					root = null;
+					return;
+				}
+				
+				if(branch < 0)
+					parent.right = null;
+				else if(branch > 0)
+					parent.left = null;
+				
+			} else if(current.left == null) {
+				if(current == root) {
+					root = current.right;
+					return;
+				}
+				
+				if(branch < 0)
+					parent.right = current.right;
+				else if(branch > 0)
+					parent.left = current.right;
+				
+			} else if(current.right == null) {
+				if(current == root) {
+					root = current.left;
+					return;
+				}
+				
+				if(branch < 0)
+					parent.right = current.left;
+				else if(branch > 0)
+					parent.left = current.left;
+			} else {
+				
+			}
+					
+		}
+		
+	}
+	
+	public boolean search(T t) {
+		if(search(root,t) == null)
+			return false;
+		else
+			return true;
+	}
+	
+	private BSTNode search(BSTNode node, T t) {
+		if(node == null) 
+			return null;
+		if(t.compareTo(node.value) > 0)
+			return search(node.right,t);
+		else if(t.compareTo(node.value) < 0)
+			return search(node.left,t);
+		else
+			return node;
+	}
+	
+	public void breadthFirstTraversal() {
+		System.out.println("\nBreadthFirstTraversal");
+		Queue<BSTNode> mQueue = new LinkedList<BSTNode>();
+		mQueue.offer(root);
+		breadthFirstTraversal(mQueue);
+	}
+	
+	private void breadthFirstTraversal(Queue<BSTNode> mQueue) {
+		BSTNode node = mQueue.poll();
+		if(node == null) 
+			return;
+		
+		System.out.print(node.value + ",");
+		if(node.left != null)
+			mQueue.offer(node.left);
+		
+		if(node.right != null)
+			mQueue.offer(node.right);
+		
+		breadthFirstTraversal(mQueue);
 	}
 	
 	public void preOrderTraversal() {

@@ -78,6 +78,7 @@ public class mainTest {
 	
 	public static void BSTRun() {
 		BSTree<Integer> mTree = new BSTree<Integer>();
+/*
 		mTree.insert(6);
 		mTree.insert(5);
 		mTree.insert(8);
@@ -87,7 +88,7 @@ public class mainTest {
 		mTree.insert(7);
 		mTree.insert(9);
 		mTree.insert(3);
-	/*	
+	*/	
 		mTree.recursiveInsert(6);
 		mTree.recursiveInsert(5);
 		mTree.recursiveInsert(8);
@@ -97,9 +98,14 @@ public class mainTest {
 		mTree.recursiveInsert(7);
 		mTree.recursiveInsert(9);
 		mTree.recursiveInsert(3);
-	*/	
+		
 		mTree.preOrderTraversal();
 		mTree.inOrderTraversal();
+		mTree.breadthFirstTraversal();
+		System.out.println(mTree.search(3));
+		System.out.println(mTree.search(6));
+		System.out.println(mTree.search(9));
+		System.out.println(mTree.search(11));
 	}
 	
 	public static void myPowersOfHanoiRecursion(int i) {
