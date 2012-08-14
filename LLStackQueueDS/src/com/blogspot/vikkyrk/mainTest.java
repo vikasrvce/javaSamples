@@ -89,23 +89,21 @@ public class mainTest {
 		mTree.insert(9);
 		mTree.insert(3);
 	*/	
-		mTree.recursiveInsert(6);
-		mTree.recursiveInsert(5);
-		mTree.recursiveInsert(8);
 		mTree.recursiveInsert(4);
-		mTree.recursiveInsert(1);
 		mTree.recursiveInsert(2);
-		mTree.recursiveInsert(7);
-		mTree.recursiveInsert(9);
+		mTree.recursiveInsert(6);
+		mTree.recursiveInsert(1);
 		mTree.recursiveInsert(3);
-		
+		mTree.recursiveInsert(5);
+		mTree.recursiveInsert(7);
+		System.out.println("Size="+mTree.size() + "Height="+mTree.maxHeight());
 		mTree.preOrderTraversal();
 		mTree.inOrderTraversal();
 		mTree.breadthFirstTraversal();
-		System.out.println(mTree.search(3));
-		System.out.println(mTree.search(6));
-		System.out.println(mTree.search(9));
-		System.out.println(mTree.search(11));
+		System.out.println("Size="+mTree.size() + "Height="+mTree.maxHeight());
+		System.out.println("isBST = " + mTree.isBST());
+		mTree.destroyBSProperty(10,-3);
+		System.out.println("isBST = " + mTree.isBST());
 	}
 	
 	public static void myPowersOfHanoiRecursion(int i) {

@@ -21,6 +21,35 @@ public class BSTree<T extends Comparable<T>> {
 		}
 	}
 	
+	/*
+	 * ***************************** Size/maxHeight ************************************
+	 */
+	
+	public int size() {
+		return computeSize(root);
+	}
+	
+	private int computeSize(BSTNode node) {
+		if(node == null) 
+			return 0;
+		return (1 + computeSize(node.right) + computeSize(node.left));
+	}
+	
+	public int maxHeight() {
+		return maxHeight(root);
+	}
+	
+	private int maxHeight(BSTNode node) {
+		if(node == null)
+			return 0;
+		int r = maxHeight(node.right);
+		int l = maxHeight(node.left);
+		return r>l?r+1:l+1;
+	}
+	
+	/*
+	 * ****************************** Insertion/Deletion ***************************
+	 */
 	public void insert(T t) {
 		if(root == null) {
 			root = new BSTNode(t);
@@ -69,67 +98,100 @@ public class BSTree<T extends Comparable<T>> {
 	}
 	
 	public void delete(T t) {
-		if(root == null)
-			return;
-		
 		BSTNode current = root;
-		BSTNode parent = null;
-		int compare, branch=0;
-		do {
-			compare = current.value.compareTo(t);
-			if(compare < 0) {
-				parent = current;
-				branch = compare;
-				current = current.right;
-			}	
-			else if(compare > 0) {
-				parent = current;
-				branch = compare;
-				current = current.left;
-			}
-			else
-				break;
-		} while(current!=null);
+		BSTNode parent = null, tempNode;
 
-		if(current != null) {
-			if(current.left == null && current.right == null) {
-				if(current == root) {
-					root = null;
-					return;
-				}
-				
-				if(branch < 0)
-					parent.right = null;
-				else if(branch > 0)
-					parent.left = null;
-				
-			} else if(current.left == null) {
-				if(current == root) {
-					root = current.right;
-					return;
-				}
-				
-				if(branch < 0)
-					parent.right = current.right;
-				else if(branch > 0)
-					parent.left = current.right;
-				
-			} else if(current.right == null) {
-				if(current == root) {
-					root = current.left;
-					return;
-				}
-				
-				if(branch < 0)
-					parent.right = current.left;
-				else if(branch > 0)
-					parent.left = current.left;
-			} else {
-				
-			}
-					
+		while(current!=null && !current.value.equals(t)) {
+			parent = current;
+			if(current.value.compareTo(t) < 0) 
+				current = current.right;
+			else
+				current = current.left;
 		}
 		
+		if(current != null) {
+			if(current.left == null) {
+				tempNode = current.right;
+			} else if(current.right == null) {
+				tempNode = current.left;
+			} else {
+				BSTNode node = findMax(current.left);
+				delete(node.value);
+				node.left = current.left;
+				node.right = current.right;
+				tempNode = node;
+			}
+			
+			if(current == root) {
+				root = tempNode;
+			} else if(current == parent.right) {
+				parent.right = tempNode;
+			} else {
+				parent.left = tempNode;
+			}
+			current = null;
+		}
+	}
+	
+
+	/*
+	 * ******************************** Validate ************************************
+	 */
+	public boolean isBST() {
+		T max = findMax();
+		T min = findMin();
+		return isBST(root,max,min);
+	}
+	
+	/*
+	 * The other algorithm is to do inOrder Traversal
+	 * and check if it is sorted or not
+	 */
+	private boolean isBST(BSTNode node, T max, T min) {
+		if(node == null)
+			return true;
+		if((node.value.compareTo(min) < 0) || (node.value.compareTo(max) > 0))
+			return false;
+		return (isBST(node.left,node.value,min) && 
+				isBST(node.right,max,node.value));
+	}
+	
+	/*
+	 * A redundant method just to test tamper the tree
+	 * to veryify isBST method.
+	 */
+	public void destroyBSProperty(T t1, T t2) {
+		root.left.left.value = t1;
+		root.right.left.value = t2;
+	}
+	
+	
+	/*
+	 * *************** Search *************************************
+	 */
+
+	public T findMax() {
+		return findMax(root).value;
+	}
+	
+	private BSTNode findMax(BSTNode node) {
+		if(node == null) 
+			return null;
+		if(node.right == null)
+			return node;
+		return(findMax(node.right));
+	}
+	
+	public T findMin() {
+		return findMin(root).value;
+	}
+	
+	private BSTNode findMin(BSTNode node) {
+		if(node == null) 
+			return null;
+		if(node.left == null)
+			return node;
+		return(findMin(node.left));
 	}
 	
 	public boolean search(T t) {
@@ -150,6 +212,9 @@ public class BSTree<T extends Comparable<T>> {
 			return node;
 	}
 	
+	/*
+	 * *******************************Traversals ************************************
+	 */
 	public void breadthFirstTraversal() {
 		System.out.println("\nBreadthFirstTraversal");
 		Queue<BSTNode> mQueue = new LinkedList<BSTNode>();
@@ -216,5 +281,23 @@ public class BSTree<T extends Comparable<T>> {
 		postOrderTraversal(node.left);
 		postOrderTraversal(node.right);
 		System.out.print(node.value + ",");		
+	}
+	
+	/*
+	 * Counting the number of unique Binary Search Trees
+	 * that can be formed, for a given N
+	 */
+	
+	public int countN(int num) {
+		if(num <= 1) 
+			return 1;
+		int left,right;
+		int sum = 0;
+		for(int i=1;i<=num;i++) {
+			left = countN(i-1);
+			right = countN(num-i);
+			sum+=left*right;
+		}
+		return sum;
 	}
 }
