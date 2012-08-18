@@ -1,5 +1,6 @@
 package com.blogspot.vikkyrk;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -8,16 +9,17 @@ public class BSTree<T extends Comparable<T>> {
 	BSTNode root = null;
 	private class BSTNode {
 		T value;
-		BSTNode left, right;
+		BSTNode left, right, parent;
 		
-		private BSTNode(T t) {
-			this(t,null,null);
+		private BSTNode(T t, BSTNode parent) {
+			this(t,null,null,parent);
 		}
 		
-		private BSTNode(T t, BSTNode l, BSTNode r) {
+		private BSTNode(T t, BSTNode l, BSTNode r, BSTNode parent) {
 			value = t;
 			left = l;
 			right = r;
+			this.parent = parent;
 		}
 	}
 	
@@ -46,36 +48,52 @@ public class BSTree<T extends Comparable<T>> {
 		int l = maxHeight(node.left);
 		return r>l?r+1:l+1;
 	}
+
+	/*
+	 * Counting the number of unique Binary Search Trees
+	 * that can be formed, for a given N
+	 */
+	public int countN(int num) {
+		if(num <= 1) 
+			return 1;
+		int left,right;
+		int sum = 0;
+		for(int i=1;i<=num;i++) {
+			left = countN(i-1);
+			right = countN(num-i);
+			sum+=left*right;
+		}
+		return sum;
+	}
 	
 	/*
 	 * ****************************** Insertion/Deletion ***************************
 	 */
 	public void insert(T t) {
 		if(root == null) {
-			root = new BSTNode(t);
+			root = new BSTNode(t,null);
 			return;
 		}
 		
-		BSTNode temp = root, prevNode = null;
-		int compare;
+		BSTNode temp = root, parent = null;
+		int compare = 0;
 		
 		while(temp!=null) {
 			compare = temp.value.compareTo(t);
+			parent = temp;
 			if(compare < 0) {
-				prevNode = temp;
 				temp = temp.right;
 			} else if(compare > 0) {
-				prevNode = temp;
 				temp = temp.left;
 			} else {
 				throw new IllegalArgumentException("This element already exists");
 			}
 		}
 		
-		if(prevNode.value.compareTo(t) < 0) {
-			prevNode.right = new BSTNode(t);
+		if(compare < 0) {
+			parent.right = new BSTNode(t,parent);
 		} else {
-			prevNode.left = new BSTNode(t);
+			parent.left = new BSTNode(t,parent);
 		}
 	}
 	
@@ -85,14 +103,16 @@ public class BSTree<T extends Comparable<T>> {
 	
 	private BSTNode recursiveInsert(BSTNode node, T t) {
 		if(node == null) {
-			node = new BSTNode(t);
+			node = new BSTNode(t,null);
 			return node;
 		}
 		
 		if(node.value.compareTo(t) < 0) {
 			node.right = recursiveInsert(node.right,t);
+			node.right.parent = node;
 		} else {
 		    node.left = recursiveInsert(node.left,t);
+		    node.left.parent = node;
 		}
 		return node;
 	}
@@ -158,7 +178,7 @@ public class BSTree<T extends Comparable<T>> {
 	
 	/*
 	 * A redundant method just to test tamper the tree
-	 * to veryify isBST method.
+	 * to verify isBST method.
 	 */
 	public void destroyBSProperty(T t1, T t2) {
 		root.left.left.value = t1;
@@ -284,20 +304,64 @@ public class BSTree<T extends Comparable<T>> {
 	}
 	
 	/*
-	 * Counting the number of unique Binary Search Trees
-	 * that can be formed, for a given N
+	 * 	********************* Balancing Trees ************************
 	 */
-	
-	public int countN(int num) {
-		if(num <= 1) 
-			return 1;
-		int left,right;
-		int sum = 0;
-		for(int i=1;i<=num;i++) {
-			left = countN(i-1);
-			right = countN(num-i);
-			sum+=left*right;
-		}
-		return sum;
-	}
+
+	 public void balanceWithExtraMemory() {
+		 ArrayList<BSTNode> arr = new ArrayList<BSTNode>();
+		 inorderTreeToArray(root,arr);
+		 root = constructBinaryTreefromArray(arr,0,arr.size()-1);
+	 }
+	 
+	 private void inorderTreeToArray(BSTNode node, ArrayList<BSTNode> arr) {
+		 if(node == null) 
+			 return;
+		 
+		 inorderTreeToArray(node.left,arr);
+		 arr.add(node);
+		 inorderTreeToArray(node.right,arr);
+	 }
+	 
+	 private BSTNode constructBinaryTreefromArray(ArrayList<BSTNode> arr, int lIndex, int rIndex) {
+		 if((arr == null) || (lIndex > rIndex))
+			 return null;
+		
+		 int mid = lIndex + (rIndex-lIndex)/2;
+		 BSTNode node = arr.get(mid);
+		 node.left = constructBinaryTreefromArray(arr,lIndex,mid-1);
+		 node.right = constructBinaryTreefromArray(arr,mid+1,rIndex);
+		 return node;
+	 }
+	 
+	 /*
+	  * Tree Rotation. Adding a new parameter to flag, i.e. parent
+	  */
+	 
+	 public void rotateRightAll() {
+		 BSTNode temp = root;
+		 while(temp != null) {
+			 if(temp.left == null)
+				 temp = temp.right;
+			 else {
+				 temp = temp.left;
+				 rotateRightOnce(temp);
+			 }
+		 }
+	 }
+	 
+	 private void rotateRightOnce(BSTNode node) {
+		 if((node == null) || (node.parent == null))
+			 return;
+		 System.out.println("Here1");
+		 if(node != node.parent.left)
+			 return;
+		 
+		 if(node.parent == root)
+			 root = node;
+		 System.out.println("Here1");
+		 node.parent.left = node.right;
+		 node.right = node.parent;
+		 node.parent = node.parent.parent;
+		 node.parent.parent = node;
+	 }
 }

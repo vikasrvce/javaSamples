@@ -78,7 +78,7 @@ public class mainTest {
 	
 	public static void BSTRun() {
 		BSTree<Integer> mTree = new BSTree<Integer>();
-/*
+
 		mTree.insert(6);
 		mTree.insert(5);
 		mTree.insert(8);
@@ -88,15 +88,19 @@ public class mainTest {
 		mTree.insert(7);
 		mTree.insert(9);
 		mTree.insert(3);
-	*/	
-		mTree.recursiveInsert(4);
+		
+	/*	mTree.recursiveInsert(1);
 		mTree.recursiveInsert(2);
-		mTree.recursiveInsert(6);
-		mTree.recursiveInsert(1);
 		mTree.recursiveInsert(3);
+		mTree.recursiveInsert(4);
 		mTree.recursiveInsert(5);
+		mTree.recursiveInsert(6);
 		mTree.recursiveInsert(7);
+	*/	
 		System.out.println("Size="+mTree.size() + "Height="+mTree.maxHeight());
+		mTree.balanceWithExtraMemory();
+		System.out.println("Size="+mTree.size() + "Height="+mTree.maxHeight());
+		mTree.rotateRightAll();
 		mTree.preOrderTraversal();
 		mTree.inOrderTraversal();
 		mTree.breadthFirstTraversal();
