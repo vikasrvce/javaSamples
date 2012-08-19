@@ -69,6 +69,11 @@ public class BSTree<T extends Comparable<T>> {
 	/*
 	 * ****************************** Insertion/Deletion ***************************
 	 */
+	
+	public void clear() {
+		root = null;
+	}
+	
 	public void insert(T t) {
 		if(root == null) {
 			root = new BSTNode(t,null);
@@ -119,7 +124,7 @@ public class BSTree<T extends Comparable<T>> {
 	
 	public void delete(T t) {
 		BSTNode current = root;
-		BSTNode parent = null, tempNode;
+		BSTNode parent = null, tempNode = null;
 
 		while(current!=null && !current.value.equals(t)) {
 			parent = current;
@@ -139,6 +144,10 @@ public class BSTree<T extends Comparable<T>> {
 				delete(node.value);
 				node.left = current.left;
 				node.right = current.right;
+				if(node.left != null)
+					node.left.parent = node;
+				if(node.right != null)
+					node.right.parent = node;
 				tempNode = node;
 			}
 			
@@ -149,6 +158,9 @@ public class BSTree<T extends Comparable<T>> {
 			} else {
 				parent.left = tempNode;
 			}
+			
+			if(tempNode != null)
+				tempNode.parent = parent;
 			current = null;
 		}
 	}
@@ -191,7 +203,11 @@ public class BSTree<T extends Comparable<T>> {
 	 */
 
 	public T findMax() {
-		return findMax(root).value;
+		BSTNode max = findMax(root);
+		if(max != null)
+			return max.value;
+		else
+			return null;
 	}
 	
 	private BSTNode findMax(BSTNode node) {
@@ -203,7 +219,11 @@ public class BSTree<T extends Comparable<T>> {
 	}
 	
 	public T findMin() {
-		return findMin(root).value;
+		BSTNode min = findMin(root);
+		if(min != null)
+			return min.value;
+		else
+			return null;
 	}
 	
 	private BSTNode findMin(BSTNode node) {
@@ -246,8 +266,11 @@ public class BSTree<T extends Comparable<T>> {
 		BSTNode node = mQueue.poll();
 		if(node == null) 
 			return;
-		
-		System.out.print(node.value + ",");
+		if(node.parent != null)
+			System.out.print("(" + node.value + "," + node.parent.value + "), ");
+		else
+			System.out.print("(" + node.value + "," + "null" + "), ");
+
 		if(node.left != null)
 			mQueue.offer(node.left);
 		
@@ -307,61 +330,140 @@ public class BSTree<T extends Comparable<T>> {
 	 * 	********************* Balancing Trees ************************
 	 */
 
-	 public void balanceWithExtraMemory() {
-		 ArrayList<BSTNode> arr = new ArrayList<BSTNode>();
-		 inorderTreeToArray(root,arr);
-		 root = constructBinaryTreefromArray(arr,0,arr.size()-1);
-	 }
+	public void balanceWithExtraMemory() {
+		ArrayList<BSTNode> arr = new ArrayList<BSTNode>();
+		inorderTreeToArray(root,arr);
+		root = constructBinaryTreefromArray(arr,0,arr.size()-1);
+		if(root != null)
+			root.parent = null;
+	}
 	 
-	 private void inorderTreeToArray(BSTNode node, ArrayList<BSTNode> arr) {
-		 if(node == null) 
-			 return;
+	private void inorderTreeToArray(BSTNode node, ArrayList<BSTNode> arr) {
+		if(node == null) 
+			return;
 		 
-		 inorderTreeToArray(node.left,arr);
-		 arr.add(node);
-		 inorderTreeToArray(node.right,arr);
-	 }
+		inorderTreeToArray(node.left,arr);
+		arr.add(node);
+		inorderTreeToArray(node.right,arr);
+	}
 	 
-	 private BSTNode constructBinaryTreefromArray(ArrayList<BSTNode> arr, int lIndex, int rIndex) {
-		 if((arr == null) || (lIndex > rIndex))
-			 return null;
+	private BSTNode constructBinaryTreefromArray(ArrayList<BSTNode> arr, int lIndex, int rIndex) {
+		if((arr == null) || (lIndex > rIndex))
+			return null;
 		
-		 int mid = lIndex + (rIndex-lIndex)/2;
-		 BSTNode node = arr.get(mid);
-		 node.left = constructBinaryTreefromArray(arr,lIndex,mid-1);
-		 node.right = constructBinaryTreefromArray(arr,mid+1,rIndex);
-		 return node;
-	 }
-	 
-	 /*
-	  * Tree Rotation. Adding a new parameter to flag, i.e. parent
-	  */
-	 
-	 public void rotateRightAll() {
-		 BSTNode temp = root;
-		 while(temp != null) {
-			 if(temp.left == null)
-				 temp = temp.right;
-			 else {
-				 temp = temp.left;
-				 rotateRightOnce(temp);
-			 }
-		 }
-	 }
-	 
-	 private void rotateRightOnce(BSTNode node) {
-		 if((node == null) || (node.parent == null))
-			 return;
-		 System.out.println("Here1");
-		 if(node != node.parent.left)
-			 return;
+		int mid = lIndex + (rIndex-lIndex)/2;
+		BSTNode node = arr.get(mid);
+		node.left = constructBinaryTreefromArray(arr,lIndex,mid-1);
+		node.right = constructBinaryTreefromArray(arr,mid+1,rIndex);
 		 
-		 if(node.parent == root)
-			 root = node;
-		 System.out.println("Here1");
-		 node.parent.left = node.right;
-		 node.right = node.parent;
-		 node.parent = node.parent.parent;
-		 node.parent.parent = node;
-	 }
-}
+		if(node.left != null)
+			node.left.parent = node;
+		if(node.right != null)
+			node.right.parent = node;
+		return node;
+	}
+	 
+	 
+	public void balanceUsingRotation() {
+		rotateRightAll();
+		BSTNode temp = null;
+		
+		for(int i=size()/2;i>0;i=i/2) {
+			temp = root.right;
+			for(int k=0;k<i;k++) {
+				rotateLeftOnce(temp);
+				if(temp.right == null)
+					break;
+				if(temp.right.right == null)
+					break;
+				temp = temp.right.right;
+			}
+		}
+	}
+	 
+	/* 
+	 * Tree Rotation. Adding a new parameter called 'parent' since
+	 * tree rotation need information about the parent. 
+	 */
+	public void rotateRightAll() {
+		BSTNode temp = root;
+		while(temp != null) {
+			if(temp.left == null)
+				temp = temp.right;
+			else {
+				temp = temp.left;
+				rotateRightOnce(temp);
+			}
+		}
+	}
+	 
+	private void rotateRightOnce(BSTNode node) {
+		if((node == null) || (node.parent == null))
+			return;
+		if(node != node.parent.left)
+			return;
+		 
+		node.parent.left = node.right;
+		
+		if(node.right != null)
+			node.right.parent = node.parent;
+		node.right = node.parent;
+		node.parent = node.parent.parent;
+		node.right.parent = node;
+		 
+		if(node.parent == null)
+			root = node;
+		else if(node.parent.right == node.right)
+			node.parent.right = node;
+		else
+			node.parent.left = node;
+	}
+	 
+	public void rotateLeftAll() {
+		BSTNode temp = root;
+		while(temp != null) {
+			if(temp.right == null)
+				temp = temp.left;
+			else {
+				temp = temp.right;
+				rotateLeftOnce(temp);
+			}
+		}
+	}
+	 
+	private void rotateLeftOnce(BSTNode node) {
+		if((node == null) || (node.parent == null))
+			return;
+		if(node != node.parent.right)
+			return;
+		 
+		node.parent.right = node.left;
+		
+		if(node.left != null)
+			node.left.parent = node.parent;
+		node.left = node.parent;
+		node.parent = node.parent.parent;
+		node.left.parent = node;
+		 
+		if(node.parent == null)
+			root = node;
+		else if(node.parent.left == node.left)
+			node.parent.left = node;
+		else
+			node.parent.right = node;
+	}
+	
+	public boolean isBalanced() {
+		return isBalanced(root);
+	}
+	
+	private boolean isBalanced(BSTNode node) {
+		if(size() == 0)
+			return true;
+		if(maxHeight() > (int)(Math.log(size())/Math.log(2)) + 1) 
+			return false;
+		else
+			return true;
+	}
+}	
+

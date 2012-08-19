@@ -1,8 +1,7 @@
 package com.blogspot.vikkyrk;
 
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Random;
 
 public class mainTest {
 	public static void main(String[] args) {
@@ -78,36 +77,94 @@ public class mainTest {
 	
 	public static void BSTRun() {
 		BSTree<Integer> mTree = new BSTree<Integer>();
-
-		mTree.insert(6);
-		mTree.insert(5);
-		mTree.insert(8);
-		mTree.insert(4);
-		mTree.insert(1);
-		mTree.insert(2);
-		mTree.insert(7);
-		mTree.insert(9);
-		mTree.insert(3);
-		
-	/*	mTree.recursiveInsert(1);
+	/*
+		mTree.recursiveInsert(1);
 		mTree.recursiveInsert(2);
 		mTree.recursiveInsert(3);
 		mTree.recursiveInsert(4);
 		mTree.recursiveInsert(5);
 		mTree.recursiveInsert(6);
 		mTree.recursiveInsert(7);
-	*/	
-		System.out.println("Size="+mTree.size() + "Height="+mTree.maxHeight());
-		mTree.balanceWithExtraMemory();
-		System.out.println("Size="+mTree.size() + "Height="+mTree.maxHeight());
-		mTree.rotateRightAll();
-		mTree.preOrderTraversal();
-		mTree.inOrderTraversal();
-		mTree.breadthFirstTraversal();
-		System.out.println("Size="+mTree.size() + "Height="+mTree.maxHeight());
-		System.out.println("isBST = " + mTree.isBST());
-		mTree.destroyBSProperty(10,-3);
-		System.out.println("isBST = " + mTree.isBST());
+	*/
+		
+		Random randomGen = new Random();
+		
+		for(int i=1;i<10;i++) {
+			
+			generateRandomTree(mTree,i);
+			System.out.println("\n\nTree Construction");
+			if(!mTree.isBST())
+				throw new RuntimeException("Failed for input Size" + i);
+			else
+				System.out.println("Success for Size = " + mTree.size());
+	
+			mTree.delete(randomGen.nextInt(i));
+			mTree.delete(randomGen.nextInt(i));
+			mTree.delete(randomGen.nextInt(i));
+			mTree.delete(randomGen.nextInt(i));
+			
+			System.out.println("Deletion Test");
+			if(!mTree.isBST())
+				throw new RuntimeException("Failed for input Size" + i);
+			else
+				System.out.println("Success for Size = " + mTree.size());
+			
+			mTree.rotateRightAll();
+			System.out.println("Right Rotation Test");
+			if(!mTree.isBST()) {
+				mTree.inOrderTraversal();
+				mTree.breadthFirstTraversal();
+				throw new RuntimeException("Failed for input Size" + i);
+			}
+			else
+				System.out.println("Success for Size = " + mTree.size());
+			
+			mTree.rotateLeftAll();
+			System.out.println("Left Rotation Test");
+			if(!mTree.isBST()) {
+				mTree.inOrderTraversal();
+				mTree.breadthFirstTraversal();
+				throw new RuntimeException("Failed for input Size" + i);
+			}	
+			else
+				System.out.println("Success for Size = " + mTree.size());
+			
+			
+			mTree.balanceWithExtraMemory();
+			System.out.println("Balance using Memory Test: Height = " + mTree.maxHeight());
+			if(!mTree.isBST() || !mTree.isBalanced())
+			{
+				mTree.inOrderTraversal();
+				mTree.breadthFirstTraversal();
+				throw new RuntimeException("Failed for input Size" + i);
+			} else
+				System.out.println("Success for Size = " + mTree.size());
+			
+			mTree.balanceUsingRotation();
+			System.out.println("Balance using Rotation Test: Height = " + mTree.maxHeight());
+			if(!mTree.isBST() || !mTree.isBalanced()) {
+				mTree.inOrderTraversal();
+				mTree.breadthFirstTraversal();
+				throw new RuntimeException("Failed for input Size" + i);
+			} else
+				System.out.println("Success for Size = " + mTree.size());
+			
+			mTree.breadthFirstTraversal();
+			mTree.clear(); 
+		} 
+	}
+	
+	/***************** Random Tree Input Generation and Testing ***************************/
+	
+	public static void generateRandomTree(BSTree<Integer> mTree, int size) {
+		mTree.clear();
+		Random randomGenerator = new Random();
+		int randomInt = randomGenerator.nextInt(size);
+		while(mTree.size() != randomInt) {
+			int randomInt1 = randomGenerator.nextInt(size);
+			if(!mTree.search(randomInt1))
+				mTree.recursiveInsert(randomInt1);
+		}
 	}
 	
 	public static void myPowersOfHanoiRecursion(int i) {
