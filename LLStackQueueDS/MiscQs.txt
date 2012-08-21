@@ -95,3 +95,44 @@ is empty
 15. Round Robin Using Queue.
 16. Array and Linked List Sorting using Stack/Queue.
 17. http://www.ardendertat.com/2012/01/09/programming-interview-questions/
+
+
+
+
+
+
+
+
+
+
+
+*******Trees*************
+
+1. Given the Pre-order of the BST .check if each non-leaf node has only one child.
+   Linear Time is expected.
+Soln: http://www.careercup.com/question?id=14453690
+
+2. Convert a BST to Doubly Linked List.
+
+Soln: Modify isBST function to pass minNode and maxNode. Try this.
+
+3. Give the level at which the BST is Complete. Try this.
+
+**4. InOrder, PreOrder, PostOrder and Find depth of a tree without using recursion.
+
+5. Given a Parent Array, find the height/depth of the tree.
+http://www.careercup.com/question?id=14241695
+
+6. Find the diameter of a tree
+Sol: http://www.careercup.com/question?id=13730794
+     http://www.cs.duke.edu/courses/spring00/cps100/assign/trees/
+     http://www.cs.duke.edu/courses/spring00/cps100/assign/trees/diameter.html
+     
+7. Find Lowest Common Ancestor
+http://www.leetcode.com/2011/07/lowest-common-ancestor-of-a-binary-tree-part-i.html
+
+8. Given a binary tree, every node has a int value, return the root node of subtree 
+with the largest sum up value. Java is more preferable. Caution: the return should 
+be a node, not a integer!
+
+9.

@@ -16,7 +16,7 @@ public class mainTest {
 		//System.out.println(myPower(2,11));
 		BSTRun();
 	}
-	
+
 	public static void stackRun() {
 		myStack<Integer> mStack = new myArrayStack<Integer>(10);
 		mStack.push(1);
