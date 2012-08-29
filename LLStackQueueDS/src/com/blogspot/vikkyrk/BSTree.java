@@ -460,10 +460,114 @@ public class BSTree<T extends Comparable<T>> {
 	private boolean isBalanced(BSTNode node) {
 		if(size() == 0)
 			return true;
+		
+		System.out.println("Size = " + size() + " Height = " + maxHeight());
 		if(maxHeight() > (int)(Math.log(size())/Math.log(2)) + 1) 
 			return false;
 		else
 			return true;
+	}
+	
+	
+	/************ Lowest Common Ancestor *********************/
+	
+	public T LcaBst(T a, T b) {
+		if(!search(a) || !search(b))
+			return null;
+		BSTNode node = LcaBst(root,a,b);
+		if(node != null)
+			return node.value;
+		else
+			return null;
+	}
+	
+	private BSTNode LcaBst(BSTNode node, T a, T b) {
+		if((node == null) || (a == null) || (b == null))
+			return null;
+		
+		int mA = node.value.compareTo(a);
+		int mB = node.value.compareTo(b);
+		
+		if((mA == 0) || (mB == 0) || 
+		   ((mA > 0) && (mB < 0)) ||
+		   ((mA < 0) && (mB > 0)))
+			return node;
+		else if((mA < 0) && (mB < 0))
+			return LcaBst(node.right,a,b);
+		else
+			return LcaBst(node.left,a,b);
+	}
+	
+	public T LcaBtTopDown(T a, T b) {
+		
+		if(!search(a) || !search(b))
+			return null;
+		
+		BSTNode node = LcaBtTopDown(root,a,b);
+		
+		if(node != null)
+			return node.value;
+		else
+			return null;
+	}
+	
+	private BSTNode LcaBtTopDown(BSTNode node, T a, T b) {
+		if((node == null) || (a == null) || (b == null))
+			return null;
+		
+		if(node.value.equals(a) || node.value.equals(b))
+			return node;
+		
+		int count = countBt(node.left,a,b);
+		
+		if(count == 1)
+			return node;
+		else if(count == 2)
+			return LcaBtTopDown(node.left,a,b);
+		else
+			return LcaBtTopDown(node.right,a,b);
+		
+	}
+	
+	private int countBt(BSTNode node, T a, T b) {
+		if(node == null)
+			return 0;
+		int count = 0;
+		if(node.value.equals(a))
+			count++;
+		if(node.value.equals(b))
+			count++;
+		count = count + countBt(node.left,a,b) + countBt(node.right,a,b);
+		return count;
+	}
+	
+	public T LcaBtDownTop(T a, T b) {
+		
+		if(!search(a) || !search(b))
+			return null;
+		
+		BSTNode node = LcaBtDownTop(root,a,b);
+		
+		if(node != null)
+			return node.value;
+		else
+			return null;
+	}
+	
+	private BSTNode LcaBtDownTop(BSTNode node, T a, T b) {
+		if((node == null) || (a == null) || (b == null))
+			return null;
+		
+		if(node.value.equals(a) || node.value.equals(b))
+			return node;
+		
+		BSTNode L = LcaBtDownTop(node.left,a,b);
+		BSTNode R = LcaBtDownTop(node.right,a,b);
+		
+		if((L != null) && (R != null))
+			return node;
+		
+		return (L != null) ? L : R;
 	}
 }	
 

@@ -77,17 +77,18 @@ public class mainTest {
 	
 	public static void BSTRun() {
 		BSTree<Integer> mTree = new BSTree<Integer>();
-	/*
+	
 		mTree.recursiveInsert(1);
 		mTree.recursiveInsert(2);
 		mTree.recursiveInsert(3);
 		mTree.recursiveInsert(4);
-		mTree.recursiveInsert(5);
-		mTree.recursiveInsert(6);
-		mTree.recursiveInsert(7);
-	*/
+		//mTree.recursiveInsert(5);
+		//mTree.recursiveInsert(6);
+		//mTree.recursiveInsert(7);
+		mTree.balanceUsingRotation();
+		System.out.println(mTree.isBalanced());
 		
-		Random randomGen = new Random();
+		/*Random randomGen = new Random();
 		
 		for(int i=1;i<10;i++) {
 			
@@ -151,7 +152,7 @@ public class mainTest {
 			
 			mTree.breadthFirstTraversal();
 			mTree.clear(); 
-		} 
+		} */
 	}
 	
 	/***************** Random Tree Input Generation and Testing ***************************/

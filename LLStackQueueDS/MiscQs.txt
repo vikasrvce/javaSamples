@@ -128,11 +128,15 @@ Sol: http://www.careercup.com/question?id=13730794
      http://www.cs.duke.edu/courses/spring00/cps100/assign/trees/
      http://www.cs.duke.edu/courses/spring00/cps100/assign/trees/diameter.html
      
-7. Find Lowest Common Ancestor
+7. Find Lowest Common Ancestor and Range Minimum Query
 http://www.leetcode.com/2011/07/lowest-common-ancestor-of-a-binary-tree-part-i.html
+http://community.topcoder.com/tc?module=Static&d1=tutorials&d2=lowestCommonAncestor
 
 8. Given a binary tree, every node has a int value, return the root node of subtree 
 with the largest sum up value. Java is more preferable. Caution: the return should 
 be a node, not a integer!
 
-9.
+9.Check if a Tree is balanced? TODO
+
+10. Find Successor and Predecessor of a Node in a BinarySearchTree.
+BST in Cormen.
