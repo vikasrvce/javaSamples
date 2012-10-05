@@ -9,12 +9,12 @@ public class mainTest {
 	    //myRun mRun = new LLPalindrome();
 		//myRun mRun = new LLSort();
 		//mRun.run();
-		//LLRun();
+		LLRun();
 		//stackRun();
 		//myPowersOfHanoiRecursion(4);
 		//nQueensImpl.printList(nQueensImpl.nQueensSolve(1));
 		//System.out.println(myPower(2,11));
-		BSTRun();
+		//BSTRun();
 	}
 
 	public static void stackRun() {
@@ -30,7 +30,7 @@ public class mainTest {
 		System.out.println(mStack);
 		
 		myListImpl<Integer> ll = new myListImpl<Integer>();
-		ll.add(1);ll.add(2);;ll.add(3);ll.add(4);
+		ll.add(1);ll.add(2);ll.add(3);ll.add(4);
 		ll.printList();
 		while(ll.size() != 0) {
 			mStack.push(ll.remove(ll.size()-1));
@@ -44,12 +44,12 @@ public class mainTest {
 	}
 	public static void LLRun() {
 		myListImpl<Integer> ml = new myListImpl<Integer>();
-		ml.printList();
+		/*ml.printList();
 		ml.add(2);
 		ml.printList();
 		ml.add(4);
 		ml.printList();
-		ml.add(3,1);
+		ml.add(1,ml.size());
 		ml.printList();
 		ml.add(4,0);
 		ml.printList();
@@ -72,9 +72,24 @@ public class mainTest {
 		ml.remove(0);
 		ml.remove(0);
 		ml.remove(0);
+		ml.printList();*/
+		
+		
+		generateRandomInput(ml);
 		ml.printList();
+		ml.generateRandomLoop();
+		System.out.println("HasLoop = " + ml.hasLoop());
+		System.out.println("LoopStartIndex = " + ml.getLoopStartIndex());
 	}
 	
+	public static void generateRandomInput(myListImpl<Integer> ml) {
+		Random randomGen = new Random();
+		int sz = randomGen.nextInt(12);
+		for(int i=0; i<sz; i++) {
+			ml.add(randomGen.nextInt(100));
+		}
+		
+	}
 	public static void BSTRun() {
 		BSTree<Integer> mTree = new BSTree<Integer>();
 	

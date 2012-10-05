@@ -1,6 +1,7 @@
 package com.blogspot.vikkyrk;
 
 import java.util.Iterator;
+import java.util.Random;
 
 public class myListImpl<T> implements myListInterface<T> {
 	
@@ -28,7 +29,7 @@ public class myListImpl<T> implements myListInterface<T> {
 		
 		iNode temp = head;
 		if(index != 0) {
-			temp = getNode(index);
+			temp = getNode(index-1);
 		}
 
 		temp.next = new iNode(t,temp.next);
@@ -36,7 +37,11 @@ public class myListImpl<T> implements myListInterface<T> {
 	}
 	
 	public T remove(int index) {
-		iNode temp = getNode(index);
+		
+		iNode temp = head;
+		if(index != 0) {
+			temp = getNode(index-1);
+		}
 		T t = temp.next.value;
 		temp.next = temp.next.next;
 		size--;
@@ -44,10 +49,10 @@ public class myListImpl<T> implements myListInterface<T> {
 	}
 	
 	private iNode getNode(int index) {
-		if(index < 0 || index >= size()) {
+		if(index < 0 || index > size()) {
 			throw new IllegalArgumentException();
 		}
-		int i = 0;
+		int i = -1;
 		iNode temp = head;
 		
 		while(i!=index) {
@@ -58,11 +63,12 @@ public class myListImpl<T> implements myListInterface<T> {
 	}
 	
 	public void set(T t, int index) {
-		getNode(index).next.value = t;
+		getNode(index).value = t;
 	}
 	
+	
 	public T get(int index) {
-		return(getNode(index).next.value);
+		return(getNode(index).value);
 	}
 	
 	public int size() {
@@ -111,5 +117,84 @@ public class myListImpl<T> implements myListInterface<T> {
 			throw new UnsupportedOperationException();
 		}
 	}
+	
+	/*
+	 * Miscellaneous List Algorithms 
+	 */
+	
+	public void generateRandomLoop() {
+		if(size == 0)
+			return;
+		
+		Random randomGen = new Random();
+		int a, b;
+		
+		a = randomGen.nextInt(size);
+		b = randomGen.nextInt(size);
 
+		if(a == size)
+			a--;
+		if(b == size)
+			b--;
+		System.out.println("Creating loop between index"+a + ", index"+b);
+
+		iNode NodeA = getNode(a);
+		iNode NodeB = getNode(b);
+		
+		if(a > b)
+			NodeA.next = NodeB;
+		else
+			NodeB.next = NodeA;
+		
+	}
+	
+	public boolean hasLoop() {
+		
+		if(size == 0) 
+			throw new NullPointerException();
+		
+		iNode slowRef = head;
+		iNode fastRef = head;
+		
+		while(true) {
+			slowRef = slowRef.next;
+			
+			if(fastRef.next != null) 
+				fastRef = fastRef.next.next;
+			else
+				return false;
+			
+			if(slowRef == fastRef)
+				return true;
+			else if(fastRef == null)
+				return false;
+		}
+	}
+	
+	public int getLoopStartIndex() {
+		if(!hasLoop())
+			return -1;
+
+		iNode slowRef = head;
+		iNode fastRef = head;
+		
+		while(true) {
+			slowRef = slowRef.next;
+			fastRef = fastRef.next.next;
+			if(slowRef == fastRef)
+				break;
+		}
+
+		slowRef = head;
+		int cnt = -1;
+		while(slowRef != fastRef) {
+			cnt++;
+			slowRef = slowRef.next;
+			fastRef = fastRef.next;
+		}
+		
+		return cnt;
+	}
+	
+	
 }
