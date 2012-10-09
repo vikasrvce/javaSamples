@@ -48,6 +48,10 @@ public class myListImpl<T> implements myListInterface<T> {
 		return t;
 	}
 	
+	public void clear() {
+		size = 0;
+		head.next = null;
+	}
 	private iNode getNode(int index) {
 		if(index < 0 || index > size()) {
 			throw new IllegalArgumentException();
@@ -98,7 +102,9 @@ public class myListImpl<T> implements myListInterface<T> {
 		iNode current = null;
 				
 		public myListIter(int index) {
-			current = getNode(index);
+			current = head;
+			if(index != 0)
+				current = getNode(index-1);
 		}
 		
 		public boolean hasNext() {
@@ -196,5 +202,83 @@ public class myListImpl<T> implements myListInterface<T> {
 		return cnt;
 	}
 	
+	public void reverseList(int index) {
+		iNode temp = head;
+		if(index != 0)
+			temp = getNode(index-1);
+		
+		reverseList(temp);
+	}
+	
+	private void reverseList(iNode hd) {
+		iNode temp = hd.next;
+		iNode temp2 = null;
+		iNode temp3;
+		while(temp != null) {
+			temp3 = temp.next;
+			temp.next = temp2;
+			temp2 = temp;
+			temp = temp3;
+		}
+		
+		hd.next = temp2;
+	}
+	
+	public T getNthElementFromLast(int n) {
+		return getNthElementFromLastInternal(n);
+	}
+	
+	private T getNthElementFromLastInternal(int n) {
+		if(n > size())
+			throw new IllegalArgumentException();
+
+		iNode slow = getNode(0);
+		iNode fast = getNode(0);
+		for(int i=0; i<n; i++) 
+			fast = fast.next;
+		
+		while(fast != null) {
+			fast = fast.next;
+			slow = slow.next;
+		}
+		return slow.value;
+	}
+	
+	public boolean isPalindrome() {
+		return isPalindromeInternal();
+	}
+
+	private boolean isPalindromeInternal() {
+		int index = (int) Math.ceil(size()/2.0);
+		iNode temp1 = getNode(0);
+		reverseList(index);
+		iNode temp2 = getNode(index);
+		
+		while(temp1 != null && temp2 != null) {
+			if(!temp1.value.equals(temp2.value)) {
+				reverseList(index);
+				return false;
+			}
+			temp1 = temp1.next;
+			temp2 = temp2.next;
+		}
+		reverseList(index);
+		return true;
+	}
+	
+	public void reversePairwise() {
+		iNode temp = head;
+		iNode temp1, temp2;
+		
+		while(temp.next !=null && temp.next.next != null) {
+			temp1 = temp.next;
+			temp.next = temp.next.next;
+			temp2 = temp.next.next;
+			temp.next.next = temp1;
+			temp1.next = temp2;
+			
+			temp = temp.next.next;
+		}
+	}
 	
 }

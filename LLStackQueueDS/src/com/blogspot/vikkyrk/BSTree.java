@@ -3,6 +3,7 @@ package com.blogspot.vikkyrk;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Stack;
 
 public class BSTree<T extends Comparable<T>> {
 	
@@ -20,6 +21,13 @@ public class BSTree<T extends Comparable<T>> {
 			left = l;
 			right = r;
 			this.parent = parent;
+		}
+		
+		@Override
+		public String toString() {
+			String s = "";
+			s = s + value;
+			return s;
 		}
 	}
 	
@@ -52,6 +60,7 @@ public class BSTree<T extends Comparable<T>> {
 	/*
 	 * Counting the number of unique Binary Search Trees
 	 * that can be formed, for a given N
+	 * 
 	 */
 	public int countN(int num) {
 		if(num <= 1) 
@@ -283,6 +292,8 @@ public class BSTree<T extends Comparable<T>> {
 	public void preOrderTraversal() {
 		System.out.println("\nPreOrderTraversal");
 		preOrderTraversal(root);
+		System.out.println("\nPreOrderTraversalIterative");
+		preOrderTraversalIterative(root);
 	}
 	
 	private void preOrderTraversal(BSTNode node) {
@@ -294,12 +305,31 @@ public class BSTree<T extends Comparable<T>> {
 		
 	}
 	
+	private void preOrderTraversalIterative(BSTNode node) {
+		if (node == null) 
+			return;
+		
+		Stack<BSTNode> stk = new Stack<BSTNode>();
+		stk.push(node);
+		BSTNode temp = null;
+		while(!stk.isEmpty()) {
+			temp = stk.pop();
+			System.out.print(temp.value + ",");
+			if(temp.right!=null)
+				stk.push(temp.right);
+			if(temp.left!=null)
+				stk.push(temp.left);
+		}
+	}
+	
 	public void inOrderTraversal() {
 		System.out.println("\nInOrderTraversal");
 		inOrderTraversal(root);
+		System.out.println("\nInOrderTraversalIterative");
+		inOrderTraversalIterative(root);
 	}
 	
-	/*
+		/*
 	 * Inorder traversal on a BSTree prints out the list
 	 * in a sorted order. This is the principle of TreeSort.
 	 * But if the tree is unbalanced, the worst case is
@@ -313,9 +343,33 @@ public class BSTree<T extends Comparable<T>> {
 		inOrderTraversal(node.right);
 	}
 	
+	
+	private void inOrderTraversalIterative(BSTNode node) {
+		if(node == null)
+			return;
+		
+		Stack<BSTNode> stk = new Stack<BSTNode>();
+		BSTNode temp = node;
+		while(true) {
+			while(temp != null) {
+				stk.push(temp);
+				temp = temp.left;
+			}
+			
+			if(stk.isEmpty())
+				break;
+			
+			temp = stk.pop();
+			System.out.print(temp.value + ",");
+			temp = temp.right;
+		}
+	}
+	
 	public void postOrderTraversal() {
 		System.out.println("\nPostOrderTraversal");
 		postOrderTraversal(root);
+		System.out.println("\nPostOrderTraversalIterative");
+		postOrderTraversalIterative(root);
 	}
 	
 	private void postOrderTraversal(BSTNode node) {
@@ -324,6 +378,33 @@ public class BSTree<T extends Comparable<T>> {
 		postOrderTraversal(node.left);
 		postOrderTraversal(node.right);
 		System.out.print(node.value + ",");		
+	}
+	
+	/*
+	 * PostOrder traversal is reverse of right to left
+	 * preOrder traversal. Hence perform a right to left
+	 * preOrder traversal and use another stack to reverse
+	 * it
+	 */
+	private void postOrderTraversalIterative(BSTNode node) {
+		Stack<BSTNode> stk1 = new Stack<BSTNode>();
+		Stack<BSTNode> stk2 = new Stack<BSTNode>();
+		
+		stk1.push(node);
+		BSTNode temp = null;
+		
+		while(!stk1.isEmpty()) {
+			temp = stk1.pop();
+			stk2.push(temp);
+			
+			if(temp.left != null)
+				stk1.push(temp.left);
+			if(temp.right != null)
+				stk1.push(temp.right);
+		}
+		
+		while(!stk2.isEmpty())
+			System.out.print(stk2.pop().value + ",");
 	}
 	
 	/*

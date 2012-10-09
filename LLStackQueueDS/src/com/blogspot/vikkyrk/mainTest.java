@@ -1,6 +1,5 @@
 package com.blogspot.vikkyrk;
 
-import java.util.Iterator;
 import java.util.Random;
 
 public class mainTest {
@@ -9,13 +8,13 @@ public class mainTest {
 	    //myRun mRun = new LLPalindrome();
 		//myRun mRun = new LLSort();
 		//mRun.run();
-		LLRun();
+		//LLRun();
 		//stackRun();
-		//myPowersOfHanoiRecursion(4);
-		//nQueensImpl.printList(nQueensImpl.nQueensSolve(1));
-		//System.out.println(myPower(2,11));
-		//BSTRun();
-	}
+		BSTRun();
+		
+		//StackAlgorithms.StockSpan();
+		//StackAlgorithms.LRAHistogram();
+	}		
 
 	public static void stackRun() {
 		myStack<Integer> mStack = new myArrayStack<Integer>(10);
@@ -76,10 +75,23 @@ public class mainTest {
 		
 		
 		generateRandomInput(ml);
+	/*	ml.clear();
+		ml.add(1);
+		ml.add(2);
+		ml.add(3);
+		ml.add(3);
+		ml.add(2);
+		ml.add(1);*/
+		//ml.generateRandomLoop();
+		//System.out.println("HasLoop = " + ml.hasLoop());
+		//System.out.println("LoopStartIndex = " + ml.getLoopStartIndex());
+		//System.out.println("Nth element From last =  " + ml.getNthElementFromLast(5));
 		ml.printList();
-		ml.generateRandomLoop();
-		System.out.println("HasLoop = " + ml.hasLoop());
-		System.out.println("LoopStartIndex = " + ml.getLoopStartIndex());
+		System.out.println("IsPalindrome = " + ml.isPalindrome());
+		ml.reversePairwise();
+		//ml.reverseList(4);
+		
+		ml.printList();
 	}
 	
 	public static void generateRandomInput(myListImpl<Integer> ml) {
@@ -93,7 +105,11 @@ public class mainTest {
 	public static void BSTRun() {
 		BSTree<Integer> mTree = new BSTree<Integer>();
 	
-		mTree.recursiveInsert(1);
+		generateRandomTree(mTree, 10);
+		mTree.preOrderTraversal();
+		mTree.inOrderTraversal();
+		mTree.postOrderTraversal();
+		/*mTree.recursiveInsert(1);
 		mTree.recursiveInsert(2);
 		mTree.recursiveInsert(3);
 		mTree.recursiveInsert(4);
@@ -101,7 +117,7 @@ public class mainTest {
 		//mTree.recursiveInsert(6);
 		//mTree.recursiveInsert(7);
 		mTree.balanceUsingRotation();
-		System.out.println(mTree.isBalanced());
+		System.out.println(mTree.isBalanced());*/
 		
 		/*Random randomGen = new Random();
 		
@@ -183,41 +199,5 @@ public class mainTest {
 		}
 	}
 	
-	public static void myPowersOfHanoiRecursion(int i) {
-		if(i > 0) {
-			myPowersOfHanoiRecursion(i-1);
-			System.out.print(i+ " ");
-			myPowersOfHanoiRecursion(i-1);
-		}
-	}
 	
-	public static int myPower(int x, int n) {
-		if(n == 0) 
-			return 1;
-		if(n == 1)
-			return x;
-		
-		int temp = myPower(x,n/2);
-		if(n%2 == 0) 
-			return temp*temp;
-		else
-			return x*temp*temp;
-	}
-	
-	public static int myBinarySearch(int [] arr, int k) {
-		
-		int left = 0, right = arr.length-1;
-		int mid;
-		while(left <= right) {
-			mid = left + (right - left)/2;
-			if(arr[mid] == k)
-				return mid-1;
-			else if(arr[mid] > k) {
-				right = mid+1;
-			}
-			else
-				left = mid;
-		}
-		return -1;
-	}
 }
