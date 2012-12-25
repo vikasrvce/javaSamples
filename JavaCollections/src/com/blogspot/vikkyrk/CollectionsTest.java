@@ -22,13 +22,14 @@ public class CollectionsTest {
 	    
 	    System.out.println(mSubList);
 		System.out.println(mList);
-		Class c = null;
+		Class<?> c = null;
 		try {
             c = Class.forName("java.lang.String");
 		} catch (ClassNotFoundException e) {
 			System.out.println("Exception Here");
 		}
 		
+		@SuppressWarnings("unused")
 		Integer s = (Integer)c.newInstance();
     }
 }
